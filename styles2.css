@@ -1,0 +1,115 @@
+/* Basic Reset */
+body, h1, h2, p, a, img, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  body {
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+   
+  }
+  
+  /* Container for product cards */
+  .product-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+  }
+  
+  /* Individual product card */
+  .product-card {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Hover effect on the card */
+  .product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Product image */
+  .product-image {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .product-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  /* Zoom effect on hover */
+  .product-card:hover .product-image img {
+    transform: scale(1.1);
+  }
+  
+  /* Product information */
+  .product-info {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .product-info h3 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .product-info p {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 15px;
+  }
+  
+  .price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4b7bec;
+    margin-bottom: 15px;
+  }
+  
+  /* Add to Cart Button */
+  .add-to-cart {
+    background: linear-gradient(135deg, #6d83f2, #5d9fff);
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.4s, transform 0.2s;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  /* Button hover effect */
+  .add-to-cart:hover {
+    background: linear-gradient(135deg, #4b7bec, #3a8efe);
+    transform: scale(1.05);
+  }
+  
+  /* Responsive Breakpoints */
+  @media (max-width: 768px) {
+    .product-container {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+  }
+  

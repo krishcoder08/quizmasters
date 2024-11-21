@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fully Animated Pricing Table</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #f7f7f7);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .pricing-table {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            max-width: 1200px;
+        }
+
+        .pricing-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.5s, box-shadow 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(120deg, #3498db, #8e44ad);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            z-index: 0;
+        }
+
+        .pricing-card:hover::before {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .pricing-card .content {
+            position: relative;
+            z-index: 1;
+            color: #333;
+        }
+
+        .pricing-header {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            margin: 1rem 0;
+            color: #fff;
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+            color: #fff;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pricing-btn {
+            display: inline-block;
+            background-color: #fff;
+            color: #3498db;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .pricing-btn:hover {
+            background-color: #2980b9;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .pricing-card {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pricing-table">
+        <div class="pricing-card">
+            <div class="content">
+                <div class="pricing-header">Basic</div>
+                <div class="pricing-price">$0<span>/free</span></div>
+                <ul class="pricing-features">
+                    <li>10 Pages</li>
+                    <li>Books</li>
+                    <li>max 20 Questions</li>
+                    <li>jtnecg</li>
+                </ul>
+                <a href="#" class="pricing-btn">Get Started</a>
+            </div>
+        </div>
+        <div class="pricing-card">
+            <div class="content">
+                <div class="pricing-header">Standard</div>
+                <div class="pricing-price">$49<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>100 Pages</li>
+                    <li>Books</li>
+                    <li>max 50 Questions</li>
+                    <li>kngnjnegn</li>
+                </ul>
+                <a href="#" class="pricing-btn">Get Started</a>
+            </div>
+        </div>
+        <div class="pricing-card">
+            <div class="content">
+                <div class="pricing-header">Premium</div>
+                <div class="pricing-price">$299<span>/year</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited Pages</li>
+                    <li>Books</li>
+                    <li>Unlimited Questions</li>
+                    <li>ekjtnnegn</li>
+                </ul>
+                <a href="#" class="pricing-btn">Get Started</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.animation = 'bounce 1s';
+            });
+            card.addEventListener('animationend', () => {
+                card.style.animation = '';
+            });
+        });
+    </script>
+</body>
+</html>

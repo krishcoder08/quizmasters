@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizmasters</title>
+    <link rel="shortcut icon" href="https://assets-global.website-files.com/64a2ab71942e1d57feb6fe39/6528221f95333ff155d01ad2_fav.gif" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css">
+   
+    <link rel="stylesheet" href="image.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Quiz Generator</h1>
+            <p>Upload a Image to Generate Your Quiz</p>
+        </div>
+
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+            <div class="file-upload">
+                <input type="file" id="image" name="image" accept="jpg/png/svg" required>
+                <label for="image">Choose image</label>
+            </div>
+            <button type="submit">Upload & Generate Quiz</button>
+        </form>
+        
+        <div class="animation-area">
+            <ul class="box-area">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

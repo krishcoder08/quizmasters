@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizmasters</title>
+    <link rel="shortcut icon" href="https://assets-global.website-files.com/64a2ab71942e1d57feb6fe39/6528221f95333ff155d01ad2_fav.gif" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css">
+  <title>PDF Uploader and Quiz Generator</title>
+  <style>
+    /* General styles */
+    body {
+      margin: 50px;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-image: url('https://www.transparenttextures.com/patterns/black-linen.png'); 
+      color: #fff;
+    }
+
+    h1 {
+      color: #f9f9f9;
+      text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
+    }
+
+    #pdfUpload {
+      margin: 20px auto;
+      padding: 12px;
+      background-color: #1e1e1e;
+      border: 2px solid #333;
+      color: #fff;
+      cursor: pointer;
+      width: 60%;
+      text-align: center;
+    }
+
+    #pdfViewer {
+      width: 80%;
+      max-width: 800px;
+      height: 600px;
+      border: 2px solid #2b2b2b;
+      margin-top: 20px;
+      background-color: #1e1e1e;
+    }
+
+    /* Button styles */
+    .btn {
+      background: linear-gradient(45deg, #00c6ff, #0072ff);
+      border: none;
+      color: white;
+      padding: 15px 40px;
+      text-align: center;
+      display: inline-block;
+      font-size: 16px;
+      margin: 15px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-radius: 30px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+      transform: scale(1.05);
+    }
+
+    /* Container for the page content */
+    .container {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      text-align: center;
+      width: 85%;
+    }
+
+    /* Navigation buttons */
+    .nav-btn {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #0072ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background-color: #005ecb;
+    }
+
+    .nav-btn:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>PDF Uploader and Quiz Generator</h1>
+
+    <!-- PDF Uploader -->
+    <input type="file" id="pdfUpload" accept="application/pdf">
+
+    <!-- PDF Viewer Canvas -->
+    <canvas id="pdfViewer"></canvas>
+
+    <!-- Navigation Buttons -->
+    <div>
+      <button class="nav-btn" id="prevPage">Previous Page</button>
+      <button class="nav-btn" id="nextPage">Next Page</button>
+    </div>
+
+    <!-- Page Number Display -->
+    <p>Page: <span id="pageNum">1</span> / <span id="pageCount">--</span></p>
+
+    <!-- Quiz Buttons -->
+    <div>
+      <button class="btn" id="quizGeneratorBtn">Quiz Generator</button>
+      <button class="btn" id="customizeQuizBtn">Customize Quiz</button>
+    </div>
+  </div>
+
+  <!-- PDF.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+
+  <!-- JavaScript for PDF Uploader and Infinite Pages -->
+  <script>
+    let pdfDoc = null;
+    let pageNum = 1;
+    let pageIsRendering = false;
+    let pageNumIsPending = null;
+
+    const scale = 1.5;
+    const canvas = document.getElementById('pdfViewer');
+    const ctx = canvas.getContext('2d');
+
+    // Render the page
+    const renderPage = (num) => {
+      pageIsRendering = true;
+
+      // Get page
+      pdfDoc.getPage(num).then((page) => {
+        const viewport = page.getViewport({ scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+
+        const renderTask = page.render(renderContext);
+
+        renderTask.promise.then(() => {
+          pageIsRendering = false;
+
+          if (pageNumIsPending !== null) {
+            renderPage(pageNumIsPending);
+            pageNumIsPending = null;
+          }
+        });
+      });
+
+      // Update page counters
+      document.getElementById('pageNum').textContent = num;
+    };
+
+    // Queue rendering of next page if current one is still rendering
+    const queueRenderPage = (num) => {
+      if (pageIsRendering) {
+        pageNumIsPending = num;
+      } else {
+        renderPage(num);
+      }
+    };
+
+    // Show previous page
+    const showPrevPage = () => {
+      if (pageNum <= 1) {
+        return;
+      }
+      pageNum--;
+      queueRenderPage(pageNum);
+    };
+
+    // Show next page
+    const showNextPage = () => {
+      if (pageNum >= pdfDoc.numPages) {
+        return;
+      }
+      pageNum++;
+      queueRenderPage(pageNum);
+    };
+
+    // Handle PDF upload
+    document.getElementById('pdfUpload').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/pdf') {
+        const fileReader = new FileReader();
+        fileReader.onload = function() {
+          const typedArray = new Uint8Array(this.result);
+
+          // Load the PDF
+          pdfjsLib.getDocument(typedArray).promise.then((pdfDoc_) => {
+            pdfDoc = pdfDoc_;
+            document.getElementById('pageCount').textContent = pdfDoc.numPages;
+
+            // Render the first page
+            renderPage(pageNum);
+          });
+        };
+        fileReader.readAsArrayBuffer(file);
+      } else {
+        alert('Please upload a valid PDF file.');
+      }
+    });
+
+    // Button event listeners
+    document.getElementById('prevPage').addEventListener('click', showPrevPage);
+    document.getElementById('nextPage').addEventListener('click', showNextPage);
+
+    // Quiz buttons
+    document.getElementById('quizGeneratorBtn').addEventListener('click', () => {
+      alert('Quiz Generator is not yet implemented.');
+    });
+
+    document.getElementById('customizeQuizBtn').addEventListener('click', () => {
+      alert('Customize Quiz is not yet implemented.');
+    });
+  </script>
+
+</body>
+</html>
